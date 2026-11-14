@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: kisan-bazaar
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATA_GOV_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: FAST2SMS_KEY
+        sync: false
