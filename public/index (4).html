@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Kisan Bazaar</title><meta name="theme-color" content="#2e7d32">
+<style>
+:root{--g:#2e7d32;--bg:#f4f8f1;--c:#fff;--t:#1b2a1b;--m:#5c6b5c;--b:#dce5d6}
+@media(prefers-color-scheme:dark){:root{--bg:#121a12;--c:#1b261b;--t:#e8f0e4;--m:#9db09a;--b:#2c3a2c}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t)}
+header{background:var(--g);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header h1{font-size:19px;margin:0}header button{background:#fff3;color:#fff;border:0;padding:6px 11px;border-radius:8px;margin-left:6px}
+nav{display:flex;background:var(--c);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:5}
+nav button{flex:1;padding:12px 2px;border:0;background:none;color:var(--m);font-size:14px;border-bottom:3px solid transparent}
+nav button.on{color:var(--g);border-color:var(--g);font-weight:600}
+main{max-width:720px;margin:0 auto;padding:14px}
+.card{background:var(--c);border:1px solid var(--b);border-radius:12px;padding:14px;margin-bottom:12px}
+input,select{width:100%;padding:11px;margin:5px 0;border:1px solid var(--b);border-radius:8px;background:var(--bg);color:var(--t);font-size:15px}
+.btn{background:var(--g);color:#fff;border:0;padding:11px 16px;border-radius:8px;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block;margin:2px 0}
+.btn.o{background:none;color:var(--g);border:1px solid var(--g)}.m{color:var(--m);font-size:13px}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}.big{font-size:18px;font-weight:700;color:var(--g)}
+table{width:100%;border-collapse:collapse}td,th{padding:8px 4px;border-bottom:1px solid var(--b);text-align:left;font-size:14px}
+.err{color:#c62828;font-size:14px}.ph{width:100%;max-height:220px;object-fit:cover;border-radius:8px;margin-bottom:8px}
+</style></head><body>
+<header><h1>🌾 <span data-t="app"></span></h1><div id="hu"></div></header>
+<nav id="nav"></nav><main id="app"></main>
+<script>
+const L={hi:{app:'किसान बाज़ार',bazaar:'🛒 बाज़ार',rates:'📈 भाव',weather:'⛅ मौसम',login:'🔑 लॉगिन',acct:'👤 खाता',logout:'लॉगआउट',
+ search:'फसल या जगह खोजें (जैसे गेहूं, इंदौर)',call:'📞 कॉल',del:'हटाएं',confirm:'हटाएं?',none:'अभी कोई फसल नहीं है।',needLogin:'नंबर देखने के लिए लॉगिन करें',
+ qtl:'क्विंटल',addT:'नई फसल डालें',crop:'फसल (जैसे गेहूं)',qty:'मात्रा (क्विंटल)',price:'रेट (₹/क्विंटल)',place:'जगह / मंडी',photo:'📷 फोटो जोड़ें (वैकल्पिक)',add:'लिस्टिंग डालें',
+ buyer:'आप बायर हैं। बाज़ार में नंबर देखकर किसान से सीधे बात करें।',name:'नाम',village:'गांव',phone:'फोन (10 अंक)',pass:'पासवर्ड',register:'रजिस्टर',newAcc:'नया खाता',
+ imF:'मैं किसान हूं',imB:'मैं बायर हूं',sendOtp:'OTP भेजें',otp:'6 अंक का OTP',otpSent:'OTP भेज दिया गया है',
+ rT:'मंडी भाव (₹/क्विंटल)',state:'राज्य (जैसे Madhya Pradesh)',com:'फसल अंग्रेज़ी में (जैसे Wheat)',find:'खोजें',mandi:'मंडी',min:'न्यूनतम',max:'अधिकतम',modal:'औसत',date:'तारीख',
+ sample:'⚠️ सैंपल डेटा है। असली मंडी भाव अभी उपलब्ध नहीं हैं।',noData:'डेटा नहीं मिला। स्पेलिंग जांचें (अंग्रेज़ी में)।',
+ city:'शहर/गांव का नाम (जैसे Bhopal)',wx:'मौसम देखें',day:'दिन',temp:'तापमान',rain:'बारिश',rainW:'🌧️ अगले 3 दिन में बारिश की संभावना है। फसल ढकें / कटाई टालें।',noCity:'जगह नहीं मिली या इंटरनेट की समस्या।',
+ order:'🛒 ऑर्डर रिक्वेस्ट',orders:'ऑर्डर',noOrders:'अभी कोई ऑर्डर नहीं।',accept:'स्वीकार करें',reject:'मना करें',done:'सौदा पूरा हुआ',cancel:'रद्द करें',rate:'⭐ रेटिंग दें',
+ qtyAsk:'कितने क्विंटल चाहिए?',orderSent:'ऑर्डर रिक्वेस्ट भेज दी गई। किसान के स्वीकार करने पर नंबर दिखेगा।',rateAsk:'रेटिंग दें (1 से 5)',reviewAsk:'कमेंट (वैकल्पिक)',
+ payNote:'पेमेंट किसान और बायर आपस में तय करें (UPI/कैश)। ऐप पेमेंट नहीं लेता।','s.pending':'⏳ इंतज़ार में','s.accepted':'✅ स्वीकार','s.rejected':'❌ मना किया','s.done':'🏁 पूरा हुआ','s.cancelled':'🚫 रद्द',
+ 'e.E_BUYER':'सिर्फ बायर ऑर्डर कर सकते हैं','e.E_QTY':'मात्रा सही नहीं या स्टॉक कम है','e.E_ORDER':'यह कार्रवाई अभी संभव नहीं',
+ 'e.E_LOGIN':'पहले लॉगिन करें','e.E_PHONE':'10 अंकों का फोन नंबर डालें','e.E_PASS':'पासवर्ड कम से कम 6 अक्षर का हो','e.E_NAME':'नाम डालें','e.E_EXISTS':'यह नंबर पहले से रजिस्टर्ड है','e.E_BAD':'फोन या पासवर्ड गलत है',
+ 'e.E_FARMER':'सिर्फ किसान फसल डाल सकते हैं','e.E_DETAILS':'सारी जानकारी सही भरें','e.E_RELOGIN':'दोबारा लॉगिन करें','e.E_NF':'नहीं मिला','e.E_SRV':'सर्वर एरर, दोबारा कोशिश करें','e.E_MANDI':'मंडी डेटा अभी नहीं आ रहा, थोड़ी देर बाद कोशिश करें',
+ 'e.E_OTP':'OTP गलत या पुराना है','e.E_WAIT':'थोड़ा रुकें, फिर OTP मांगें','e.E_SMS':'SMS नहीं जा सका','e.E_PHOTO':'फोटो अपलोड नहीं हुई'},
+en:{app:'Kisan Bazaar',bazaar:'🛒 Market',rates:'📈 Rates',weather:'⛅ Weather',login:'🔑 Login',acct:'👤 Account',logout:'Logout',
+ search:'Search crop or place (e.g. wheat, Indore)',call:'📞 Call',del:'Delete',confirm:'Delete?',none:'No crops listed yet.',needLogin:'Login to see the number',
+ qtl:'quintal',addT:'Add a new crop',crop:'Crop (e.g. Wheat)',qty:'Quantity (quintal)',price:'Rate (₹/quintal)',place:'Place / Mandi',photo:'📷 Add photo (optional)',add:'Post listing',
+ buyer:'You are logged in as a buyer. See numbers in the Market tab and talk to farmers directly.',name:'Name',village:'Village',phone:'Phone (10 digits)',pass:'Password',register:'Register',newAcc:'New account',
+ imF:'I am a farmer',imB:'I am a buyer',sendOtp:'Send OTP',otp:'6-digit OTP',otpSent:'OTP sent',
+ rT:'Mandi Rates (₹/quintal)',state:'State (e.g. Madhya Pradesh)',com:'Crop in English (e.g. Wheat)',find:'Search',mandi:'Mandi',min:'Min',max:'Max',modal:'Modal',date:'Date',
+ sample:'⚠️ Sample data. Live mandi rates are not available right now.',noData:'No data found. Check spelling (in English).',
+ city:'Town/village name (e.g. Bhopal)',wx:'Get weather',day:'Day',temp:'Temp',rain:'Rain',rainW:'🌧️ Rain likely in the next 3 days. Cover your crop / delay harvest.',noCity:'Place not found or network issue.',
+ order:'🛒 Order request',orders:'Orders',noOrders:'No orders yet.',accept:'Accept',reject:'Decline',done:'Mark deal completed',cancel:'Cancel',rate:'⭐ Rate',
+ qtyAsk:'How many quintals do you need?',orderSent:'Order request sent. The farmer\'s number is shown once they accept.',rateAsk:'Rating (1 to 5)',reviewAsk:'Comment (optional)',
+ payNote:'Farmer and buyer settle payment themselves (UPI/cash). The app does not handle money.','s.pending':'⏳ Pending','s.accepted':'✅ Accepted','s.rejected':'❌ Declined','s.done':'🏁 Completed','s.cancelled':'🚫 Cancelled',
+ 'e.E_BUYER':'Only buyers can place orders','e.E_QTY':'Invalid quantity or not enough stock','e.E_ORDER':'This action is not possible now',
+ 'e.E_LOGIN':'Please login first','e.E_PHONE':'Enter a 10-digit phone number','e.E_PASS':'Password must be at least 6 characters','e.E_NAME':'Enter your name','e.E_EXISTS':'This number is already registered','e.E_BAD':'Wrong phone or password',
+ 'e.E_FARMER':'Only farmers can post crops','e.E_DETAILS':'Fill all details correctly','e.E_RELOGIN':'Please login again','e.E_NF':'Not found','e.E_SRV':'Server error, try again','e.E_MANDI':'Mandi data unavailable, try again later',
+ 'e.E_OTP':'OTP is wrong or expired','e.E_WAIT':'Please wait before requesting another OTP','e.E_SMS':'Could not send SMS','e.E_PHOTO':'Photo upload failed'}};
+const $=s=>document.querySelector(s);let tab='bazaar',lg=localStorage.lg||'hi',me=JSON.parse(localStorage.me||'null'),tk=localStorage.tk||'',cfg={otp:false},photoId='',reg=false,otpSent=false;
+const T=k=>L[lg][k]||L.en[k]||k,errT=e=>T('e.'+e.message)===('e.'+e.message)?e.message:T('e.'+e.message);
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(p,o={}){const r=await fetch('/api/'+p,{...o,headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:o.body&&JSON.stringify(o.body)});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'E_SRV');return d}
+function setAuth(d){tk=d.token;me=d.user;localStorage.tk=tk;localStorage.me=JSON.stringify(me)}
+function logout(){tk='';me=null;localStorage.removeItem('tk');localStorage.removeItem('me');go('bazaar')}
+function setLg(){lg=lg==='hi'?'en':'hi';localStorage.lg=lg;document.documentElement.lang=lg;render()}
+function go(t){tab=t;render()}
+function render(){
+ document.title=T('app');document.querySelector('[data-t=app]').textContent=T('app');
+ $('#hu').innerHTML=(me?`<span class="m" style="color:#fff">${esc(me.name)}</span><button onclick="logout()">${T('logout')}</button>`:'')+`<button onclick="setLg()">${lg==='hi'?'EN':'हिं'}</button>`;
+ $('#nav').innerHTML=[['bazaar','bazaar'],['rates','rates'],['weather','weather'],['acc',me?'acct':'login']].map(([k,v])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')">${T(v)}</button>`).join('');
+ ({bazaar,rates,weather,acc})[tab]();
+}
+async function bazaar(q=''){
+ $('#app').innerHTML=`<input id="q" placeholder="${esc(T('search'))}" value="${esc(q)}"><div id="l">…</div>`;
+ $('#q').onchange=e=>bazaar(e.target.value);
+ try{const ls=await api('listings?q='+encodeURIComponent(q));
+ $('#l').innerHTML=ls.length?ls.map(l=>`<div class="card">${l.photo?`<img class="ph" loading="lazy" alt="" src="/api/photo/${esc(l.photo)}">`:''}
+ <div class="row"><b>${esc(l.crop)}</b><span class="big">₹${esc(l.price)}/${T('qtl')}</span></div>
+ <div class="m">${esc(l.qty)} ${T('qtl')} • ${esc(l.place)} • ${esc(l.farmer)} ${l.rating?`⭐${l.rating.avg} (${l.rating.n})`:''}</div><div style="margin-top:10px">
+ ${l.phone?`<a class="btn" href="tel:${esc(l.phone)}">${T('call')}</a> <a class="btn o" target="_blank" rel="noopener" href="https://wa.me/91${esc(l.phone)}?text=${encodeURIComponent(l.crop+' - Kisan Bazaar')}">WhatsApp</a>`:`<span class="m">${T('needLogin')}</span>`}
+ ${me&&me.role==='buyer'?` <button class="btn o" onclick="orderAsk('${esc(l.id)}',${+l.qty})">${T('order')}</button>`:''}
+ ${me&&me.id===l.owner?` <button class="btn o" onclick="del('${esc(l.id)}')">${T('del')}</button>`:''}</div></div>`).join(''):`<p class="m">${T('none')}</p>`}catch(e){$('#l').innerHTML=`<p class="err">${esc(errT(e))}</p>`}
+}
+async function del(id){if(confirm(T('confirm'))){await api('listings/'+id,{method:'DELETE'});bazaar()}}
+const CROPS=[['Wheat','गेहूं'],['Paddy(Dhan)','धान'],['Soyabean','सोयाबीन'],['Gram','चना'],['Mustard','सरसों'],['Maize','मक्का'],['Onion','प्याज'],['Potato','आलू'],['Tomato','टमाटर'],['Garlic','लहसुन'],['Cotton','कपास']];
+const STATES=['Madhya Pradesh','Uttar Pradesh','Maharashtra','Rajasthan','Punjab','Haryana','Gujarat','Bihar','West Bengal','Karnataka','Andhra Pradesh','Telangana','Tamil Nadu','Chhattisgarh','Odisha'];
+async function rates(st='',cm=''){
+ $('#app').innerHTML=`<div class="card"><b>${T('rT')}</b>
+ <input id="st" list="sl" placeholder="${esc(T('state'))}" value="${esc(st)}"><datalist id="sl">${STATES.map(x=>`<option value="${x}">`).join('')}</datalist>
+ <input id="cm" list="cl" placeholder="${esc(T('com'))}" value="${esc(cm)}"><datalist id="cl">${CROPS.map(([e,h])=>`<option value="${e}" label="${h}">`).join('')}</datalist>
+ <button class="btn" onclick="rates($('#st').value.trim(),$('#cm').value.trim())">${T('find')}</button><div id="rt" style="margin-top:10px">…</div></div>`;
+ try{const d=await api('rates?state='+encodeURIComponent(st)+'&commodity='+encodeURIComponent(cm));
+ $('#rt').innerHTML=(d.sample?`<p class="m">${T('sample')}</p>`:'')+(d.rates.length?`<div style="overflow-x:auto"><table><tr><th>${T('crop').split(' (')[0]}</th><th>${T('mandi')}</th><th>${T('min')}</th><th>${T('max')}</th><th>${T('modal')}</th><th>${T('date')}</th></tr>
+ ${d.rates.map(r=>`<tr><td>${esc(r.commodity)}</td><td>${esc(r.market)}<br><span class="m">${esc(r.district)}, ${esc(r.state)}</span></td><td>${esc(r.min_price)}</td><td>${esc(r.max_price)}</td><td><b>${esc(r.modal_price)}</b></td><td class="m">${esc(r.arrival_date)}</td></tr>`).join('')}</table></div>`:`<p class="m">${T('noData')}</p>`)}
+ catch(e){$('#rt').innerHTML=`<p class="err">${esc(errT(e))}</p>`}
+}
+function weather(){$('#app').innerHTML=`<div class="card"><input id="city" placeholder="${esc(T('city'))}"><button class="btn" onclick="wx()">${T('wx')}</button></div><div id="w"></div>`}
+async function wx(){
+ const c=$('#city').value.trim();if(!c)return;$('#w').textContent='…';
+ try{const g=await(await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&language='+lg+'&name='+encodeURIComponent(c))).json();
+ if(!g.results)throw 0;const p=g.results[0];
+ const f=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${p.latitude}&longitude=${p.longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=auto`)).json();
+ const d=f.daily;$('#w').innerHTML=`<div class="card"><b>${esc(p.name)}, ${esc(p.admin1||'')}</b><table><tr><th>${T('day')}</th><th>${T('temp')}</th><th>${T('rain')}</th></tr>
+ ${d.time.map((t,i)=>`<tr><td>${t.slice(5)}</td><td>${d.temperature_2m_min[i]}–${d.temperature_2m_max[i]}°C</td><td>${d.precipitation_probability_max[i]}% (${d.precipitation_sum[i]}mm)</td></tr>`).join('')}</table>
+ ${d.precipitation_probability_max.slice(0,3).some(x=>x>60)?`<p class="err">${T('rainW')}</p>`:''}</div>`}
+ catch{$('#w').innerHTML=`<p class="err">${T('noCity')}</p>`}
+}
+function acc(){
+ if(me&&me.role==='farmer'){photoId='';$('#app').innerHTML=`<div class="card"><b>${T('addT')}</b>
+ <input id="c" list="cl2" placeholder="${esc(T('crop'))}"><datalist id="cl2">${CROPS.map(([e,h])=>`<option value="${lg==='hi'?h:e}">`).join('')}</datalist>
+ <input id="qt" type="number" min="0" placeholder="${esc(T('qty'))}"><input id="pr" type="number" min="0" placeholder="${esc(T('price'))}"><input id="pl" placeholder="${esc(T('place'))}">
+ <label class="btn o">${T('photo')}<input id="pf" type="file" accept="image/*" hidden onchange="pick(this)"></label><div id="pv"></div>
+ <p id="e" class="err"></p><button class="btn" onclick="addL()">${T('add')}</button></div><div id="ord"></div>`;return loadOrders()}
+ if(me){$('#app').innerHTML=`<div class="card">${T('buyer')}</div><div id="ord"></div>`;return loadOrders()}
+ const d=reg?'block':'none';
+ $('#app').innerHTML=`<div class="card"><b>${reg?T('register'):T('login').slice(2)}</b>
+ <select id="role" style="display:${d}"><option value="farmer">${T('imF')}</option><option value="buyer">${T('imB')}</option></select>
+ <input id="nm" placeholder="${esc(T('name'))}" style="display:${d}"><input id="vl" placeholder="${esc(T('village'))}" style="display:${d}">
+ <input id="ph" type="tel" maxlength="10" inputmode="numeric" placeholder="${esc(T('phone'))}"><input id="pw" type="password" placeholder="${esc(T('pass'))}">
+ ${reg&&cfg.otp?`<button class="btn o" onclick="sendOtp()">${T('sendOtp')}</button><input id="ot" inputmode="numeric" maxlength="6" placeholder="${esc(T('otp'))}">`:''}
+ <p id="e" class="err"></p><button class="btn" onclick="sub()">${reg?T('register'):T('login').slice(2)}</button> <button class="btn o" onclick="reg=!reg;acc()">${reg?T('login').slice(2):T('newAcc')}</button></div>`;
+}
+async function orderAsk(id,max){const q=prompt(T('qtyAsk')+' (max '+max+')');if(!q)return;
+ try{await api('orders',{method:'POST',body:{listing:id,qty:q}});alert(T('orderSent'));go('acc')}catch(e){alert(errT(e))}}
+async function act(id,a,body){try{await api(`orders/${id}/${a}`,{method:'POST',body:body||{}});loadOrders()}catch(e){alert(errT(e))}}
+function rate(id){const s=prompt(T('rateAsk'));if(!s)return;act(id,'rate',{stars:s,text:prompt(T('reviewAsk'))||''})}
+const B=(id,a,k)=>`<button class="btn o" onclick="act('${id}','${a}')">${T(k)}</button> `;
+function actions(o){const f=o.role==='farmer',s=o.status;let x='';
+ if(f&&s==='pending')x=B(o.id,'accept','accept')+B(o.id,'reject','reject');else if(f&&s==='accepted')x=B(o.id,'done','done');
+ else if(!f&&(s==='pending'||s==='accepted'))x=B(o.id,'cancel','cancel');else if(!f&&s==='done'&&!o.rating)x=`<button class="btn o" onclick="rate('${o.id}')">${T('rate')}</button>`;
+ if(o.rating)x+=`<div class="m">⭐${o.rating.stars}${o.rating.text?' — '+esc(o.rating.text):''}</div>`;return x}
+async function loadOrders(){try{const os=await api('orders');
+ $('#ord').innerHTML=`<h3>${T('orders')}</h3><p class="m">${T('payNote')}</p>`+(os.length?os.map(o=>`<div class="card"><div class="row"><b>${esc(o.crop)} • ${esc(o.qty)} ${T('qtl')}</b><span class="m">${T('s.'+o.status)}</span></div>
+ <div class="m">${esc(o.role==='buyer'?o.farmerName:o.buyerName)} • ₹${o.qty*o.price}</div>${o.phone?`<a class="btn" href="tel:${esc(o.phone)}">${T('call')}</a> `:''}${actions(o)}</div>`).join(''):`<p class="m">${T('noOrders')}</p>`)}
+ catch(e){$('#ord').innerHTML=`<p class="err">${esc(errT(e))}</p>`}}
+async function sendOtp(){try{const d=await api('otp/send',{method:'POST',body:{phone:$('#ph').value}});$('#e').style.color='var(--g)';$('#e').textContent=T('otpSent')+(d.dev?' (dev: '+d.dev+')':'')}catch(e){$('#e').style.color='';$('#e').textContent=errT(e)}}
+async function sub(){try{const b={phone:$('#ph').value,password:$('#pw').value};
+ if(reg)Object.assign(b,{name:$('#nm').value,village:$('#vl').value,role:$('#role').value,otp:cfg.otp?$('#ot').value:undefined});
+ setAuth(await api(reg?'register':'login',{method:'POST',body:b}));reg=false;go('bazaar')}catch(e){$('#e').textContent=errT(e)}}
+function pick(inp){const f=inp.files[0];if(!f)return;const img=new Image();img.onload=async()=>{
+ const k=Math.min(1,800/Math.max(img.width,img.height)),cv=document.createElement('canvas');cv.width=img.width*k;cv.height=img.height*k;
+ cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);const data=cv.toDataURL('image/jpeg',.7);
+ try{photoId=(await api('photos',{method:'POST',body:{data}})).id;$('#pv').innerHTML=`<img class="ph" alt="" src="${data}">`}catch(e){$('#e').textContent=errT(e)}};img.src=URL.createObjectURL(f)}
+async function addL(){try{await api('listings',{method:'POST',body:{crop:$('#c').value,qty:$('#qt').value,price:$('#pr').value,place:$('#pl').value,photo:photoId}});go('bazaar')}catch(e){$('#e').textContent=errT(e)}}
+fetch('/api/config').then(r=>r.json()).then(c=>cfg=c).catch(()=>{}).finally(render);
+</script></body></html>
